@@ -24,35 +24,44 @@ app.use(express.json());
 // });
 
 app.post('/auth/register', registerValidation, async (request, response) => {
-  const errors = validationResult(request);
+  try {
+    const errors = validationResult(request);
 
-  if (!errors.isEmpty()) {
-    return response.status(400).json(errors.array());
+    if (!errors.isEmpty()) {
+      return response.status(400).json(errors.array());
+    }
+
+    const password = request.body.password;
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+
+    const doc = new UserModel({
+      email: request.body.email,
+      passwordHash: hash,
+      fullName: request.body.fullName,
+      avatarUrl: request.body.avatarUrl,
+    });
+
+    const user = await doc.save();
+
+    const token = jwt.sign(
+      {
+        _id: user._id,
+      },
+      'secret88',
+      { expiresIn: '30d' } //token valid 30 days
+    );
+
+    const { passwordHash, ...userData } = user._doc; //get info without passwordHash
+
+    response.json({ ...userData, token });
+  } catch (err) {
+    console.log(err);
+    const status = err.status || 500;
+    response.status(status).json({
+      message: 'Failed to register!',
+    });
   }
-
-  const password = request.body.password;
-  const salt = await bcrypt.genSalt(10);
-  const passwordHash = await bcrypt.hash(password, salt);
-
-  const doc = new UserModel({
-    email: request.body.email,
-    passwordHash,
-    fullName: request.body.fullName,
-    avatarUrl: request.body.avatarUrl,
-  });
-
-  const user = await doc.save();
-
-  response.json(user);
-  // console.log(request.body);
-  // const token = jwt.sign(
-  //   {
-  //     email: request.body.email,
-  //     fullName: 'Alexej Ilyutik',
-  //   },
-  //   'secret8448'
-  // );
-  // response.json({ success: true, token });
 });
 
 app.listen(3008, (err) => {
