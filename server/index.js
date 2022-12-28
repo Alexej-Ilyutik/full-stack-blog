@@ -23,6 +23,46 @@ app.use(express.json());
 //   response.send('fth888fljkh');
 // });
 
+app.post('/auth/login', async (request, response) => {
+  try {
+    const user = await UserModel.findOne({ email: request.body.email });
+    if (!user) {
+      return response.status(404).json({
+        message: 'User is not found!',
+      });
+    }
+
+    const isValidPass = await bcrypt.compare(
+      request.body.password,
+      user._doc.passwordHash
+    );
+
+    if (!isValidPass) {
+      return response.status(404).json({
+        message: 'Wrong login or password!',
+      });
+    }
+
+    const token = jwt.sign(
+      {
+        _id: user._id,
+      },
+      'secret88',
+      { expiresIn: '30d' } //token valid 30 days
+    );
+
+    const { passwordHash, ...userData } = user._doc; //get info without passwordHash
+
+    response.json({ ...userData, token });
+  } catch (err) {
+     console.log(err);
+     const status = err.status || 500;
+     response.status(status).json({
+       message: 'Failed to login!',
+     });
+  }
+});
+
 app.post('/auth/register', registerValidation, async (request, response) => {
   try {
     const errors = validationResult(request);
