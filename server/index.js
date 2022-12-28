@@ -6,6 +6,7 @@ import { validationResult } from 'express-validator';
 
 import { registerValidation } from './validations/auth.js';
 import UserModel from './models/User.js';
+import checkAuth from './utils/checkAuth.js';
 
 mongoose.set('strictQuery', false);
 mongoose
@@ -19,9 +20,26 @@ const app = express();
 
 app.use(express.json());
 
-// app.get('/', (request, response) => {
-//   response.send('fth888fljkh');
-// });
+app.get('/auth/user', checkAuth, async (request, response) => {
+  try {
+    const user = await UserModel.findById(request.userId);
+    if (!user) {
+      return response.status(404).json({
+        message: 'User does not exist!',
+      });
+    }
+
+    const { passwordHash, ...userData } = user._doc; //get info without passwordHash
+
+    response.json({ ...userData });
+  } catch (err) {
+    console.log(err);
+    const status = err.status || 500;
+    response.status(status).json({
+      message: '!!!No access!!!',
+    });
+  }
+});
 
 app.post('/auth/login', async (request, response) => {
   try {
@@ -55,11 +73,11 @@ app.post('/auth/login', async (request, response) => {
 
     response.json({ ...userData, token });
   } catch (err) {
-     console.log(err);
-     const status = err.status || 500;
-     response.status(status).json({
-       message: 'Failed to login!',
-     });
+    console.log(err);
+    const status = err.status || 500;
+    response.status(status).json({
+      message: 'Failed to login!',
+    });
   }
 });
 
