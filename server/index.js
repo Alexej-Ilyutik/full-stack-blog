@@ -16,6 +16,7 @@ import {
   updatePost,
 } from './controllers/PostController.js';
 import checkAuth from './utils/checkAuth.js';
+import handleValidationErrors from './utils/handleValidationErrors.js';
 
 mongoose.set('strictQuery', false);
 mongoose
@@ -42,8 +43,13 @@ app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 
 app.get('/auth/user', checkAuth, getUser);
-app.post('/auth/login', loginValidation, login);
-app.post('/auth/register', registerValidation, register);
+app.post('/auth/login', loginValidation, handleValidationErrors, login);
+app.post(
+  '/auth/register',
+  registerValidation,
+  handleValidationErrors,
+  register
+);
 
 app.post('/upload', checkAuth, upload.single('image'), (request, response) => {
   response.json({
@@ -53,9 +59,21 @@ app.post('/upload', checkAuth, upload.single('image'), (request, response) => {
 
 app.get('/posts', getAllPosts);
 app.get('/posts/:id', getPost);
-app.post('/posts', checkAuth, postCreateValidation, createPost);
+app.post(
+  '/posts',
+  checkAuth,
+  postCreateValidation,
+  handleValidationErrors,
+  createPost
+);
 app.delete('/posts/:id', checkAuth, removePost);
-app.patch('/posts/:id', checkAuth, updatePost);
+app.patch(
+  '/posts/:id',
+  checkAuth,
+  postCreateValidation,
+  handleValidationErrors,
+  updatePost
+);
 
 app.listen(3008, (err) => {
   if (err) {
