@@ -1,8 +1,13 @@
 import express from 'express';
 import mongoose from 'mongoose';
 
-import { loginValidation, registerValidation } from './validations/validations.js';
+import {
+  loginValidation,
+  registerValidation,
+  postCreateValidation,
+} from './validations/validations.js';
 import { register, login, getUser } from './controllers/UserController.js';
+import { createPost } from './controllers/PostController.js';
 import checkAuth from './utils/checkAuth.js';
 
 mongoose.set('strictQuery', false);
@@ -22,6 +27,12 @@ app.get('/auth/user', checkAuth, getUser);
 app.post('/auth/login', loginValidation, login);
 
 app.post('/auth/register', registerValidation, register);
+
+// app.get('/posts', getAllPosts);
+// app.get('/posts/:id', getPost);
+app.post('/posts', checkAuth, postCreateValidation, createPost);
+// app.delete('/posts', removePost);
+// app.patch('/posts', updatePost);
 
 app.listen(3008, (err) => {
   if (err) {
