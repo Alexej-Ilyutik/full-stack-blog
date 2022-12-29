@@ -37,8 +37,7 @@ export const getPost = async (request, response) => {
         }
 
         if (!doc) {
-          const status = err.status || 404;
-          return response.status(status).json({
+          return response.status(404).json({
             message: 'Article not found!',
           });
         }
@@ -73,6 +72,72 @@ export const createPost = async (request, response) => {
     const status = err.status || 500;
     response.status(status).json({
       message: 'Failed to create article!',
+    });
+  }
+};
+
+export const removePost = async (request, response) => {
+  try {
+    const postId = request.params.id; //get id from route
+
+    PostModel.findOneAndDelete(
+      {
+        _id: postId,
+      },
+      (err, doc) => {
+        if (err) {
+          console.log(err);
+          const status = err.status || 500;
+          response.status(status).json({
+            message: 'Failed to delete article!',
+          });
+        }
+
+        if (!doc) {
+          return response.status(404).json({
+            message: 'Article not found!',
+          });
+        }
+
+        response.json({
+          success: true,
+        });
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    const status = err.status || 500;
+    response.status(status).json({
+      message: 'Failed to delete article!',
+    });
+  }
+};
+
+export const updatePost = async (request, response) => {
+  try {
+    const postId = request.params.id; //get id from route
+
+    await PostModel.updateOne(
+      {
+        _id: postId,
+      },
+      {
+        title: request.body.title,
+        text: request.body.text,
+        tags: request.body.tags,
+        imageUrl: request.body.imageUrl,
+        author: request.userId,
+      }
+    );
+    response.json({
+      success: true,
+    });
+
+  } catch (err) {
+    console.log(err);
+    const status = err.status || 500;
+    response.status(status).json({
+      message: 'Failed to update article!',
     });
   }
 };

@@ -11,6 +11,8 @@ import {
   getAllPosts,
   getPost,
   createPost,
+  removePost,
+  updatePost,
 } from './controllers/PostController.js';
 import checkAuth from './utils/checkAuth.js';
 
@@ -35,8 +37,8 @@ app.post('/auth/register', registerValidation, register);
 app.get('/posts', getAllPosts);
 app.get('/posts/:id', getPost);
 app.post('/posts', checkAuth, postCreateValidation, createPost);
-// app.delete('/posts', removePost);
-// app.patch('/posts', updatePost);
+app.delete('/posts/:id', checkAuth, removePost);
+app.patch('/posts/:id', checkAuth, updatePost);
 
 app.listen(3008, (err) => {
   if (err) {
