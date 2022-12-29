@@ -7,7 +7,7 @@ import {
   postCreateValidation,
 } from './validations/validations.js';
 import { register, login, getUser } from './controllers/UserController.js';
-import { createPost } from './controllers/PostController.js';
+import { getAllPosts, createPost } from './controllers/PostController.js';
 import checkAuth from './utils/checkAuth.js';
 
 mongoose.set('strictQuery', false);
@@ -28,7 +28,7 @@ app.post('/auth/login', loginValidation, login);
 
 app.post('/auth/register', registerValidation, register);
 
-// app.get('/posts', getAllPosts);
+app.get('/posts', getAllPosts);
 // app.get('/posts/:id', getPost);
 app.post('/posts', checkAuth, postCreateValidation, createPost);
 // app.delete('/posts', removePost);

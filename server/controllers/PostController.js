@@ -1,5 +1,19 @@
 import PostModel from '../models/Post.js';
 
+export const getAllPosts = async (request, response) => {
+  try {
+    const posts = await PostModel.find().populate('author').exec(); // .populate('author').exec(); - get all info by user
+
+    response.json(posts);
+  } catch (err) {
+    console.log(err);
+    const status = err.status || 500;
+    response.status(status).json({
+      message: 'Failed to retrieve articles!',
+    });
+  }
+};
+
 export const createPost = async (request, response) => {
   try {
     const doc = new PostModel({
@@ -12,7 +26,7 @@ export const createPost = async (request, response) => {
 
     const post = await doc.save();
 
-    response.json(post)
+    response.json(post);
   } catch (err) {
     console.log(err);
     const status = err.status || 500;
