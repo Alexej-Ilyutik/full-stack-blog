@@ -7,7 +7,7 @@ export const getLastTags = async (request, response) => {
       .map((obj) => obj.tags)
       .flat()
       .slice(0, 5);
-    response.json(posts);
+    response.json(tags);
   } catch (err) {
     console.log(err);
     const status = err.status || 500;

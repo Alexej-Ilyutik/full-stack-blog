@@ -60,8 +60,10 @@ app.post('/upload', checkAuth, upload.single('image'), (request, response) => {
   });
 });
 
-app.get('/posts', getAllPosts);
 app.get('/tags', getLastTags);
+
+app.get('/posts', getAllPosts);
+// app.get('/posts/tags', getLastTags);
 app.get('/posts/:id', getPost);
 app.post(
   '/posts',
