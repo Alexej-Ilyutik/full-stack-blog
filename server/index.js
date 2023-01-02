@@ -15,6 +15,7 @@ import {
   createPost,
   removePost,
   updatePost,
+  getLastTags,
 } from './controllers/PostController.js';
 import checkAuth from './utils/checkAuth.js';
 import handleValidationErrors from './utils/handleValidationErrors.js';
@@ -60,6 +61,7 @@ app.post('/upload', checkAuth, upload.single('image'), (request, response) => {
 });
 
 app.get('/posts', getAllPosts);
+app.get('/tags', getLastTags);
 app.get('/posts/:id', getPost);
 app.post(
   '/posts',

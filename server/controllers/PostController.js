@@ -1,5 +1,22 @@
 import PostModel from '../models/Post.js';
 
+export const getLastTags = async (request, response) => {
+  try {
+    const posts = await PostModel.find().limit(5).exec(); // .get tags from 5 latest posts
+    const tags = posts
+      .map((obj) => obj.tags)
+      .flat()
+      .slice(0, 5);
+    response.json(posts);
+  } catch (err) {
+    console.log(err);
+    const status = err.status || 500;
+    response.status(status).json({
+      message: 'Failed to retrieve tags!',
+    });
+  }
+};
+
 export const getAllPosts = async (request, response) => {
   try {
     const posts = await PostModel.find().populate('author').exec(); // .populate('author').exec(); - get all info by user
@@ -132,7 +149,6 @@ export const updatePost = async (request, response) => {
     response.json({
       success: true,
     });
-
   } catch (err) {
     console.log(err);
     const status = err.status || 500;
