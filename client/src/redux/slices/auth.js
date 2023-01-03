@@ -9,6 +9,12 @@ export const fetchAuth = createAsyncThunk(
   }
 );
 
+export const fetchAuthUser = createAsyncThunk('auth/fetchAuthUser', async () => {
+  const { data } = await instanse.get('auth/user');
+  return data;
+});
+
+
 const initialState = {
   data: null,
   status: 'loading',
@@ -18,9 +24,9 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    logout: state =>{
+    logout: (state) => {
       state.data = null;
-    }
+    },
   },
   extraReducers: {
     [fetchAuth.pending]: (state) => {
@@ -32,6 +38,18 @@ const authSlice = createSlice({
       state.status = 'loaded';
     },
     [fetchAuth.rejected]: (state) => {
+      state.data = null;
+      state.status = 'error';
+    },
+    [fetchAuthUser.pending]: (state) => {
+      state.data = null;
+      state.status = 'loading';
+    },
+    [fetchAuthUser.fulfilled]: (state, action) => {
+      state.data = action.payload;
+      state.status = 'loaded';
+    },
+    [fetchAuthUser.rejected]: (state) => {
       state.data = null;
       state.status = 'error';
     },
