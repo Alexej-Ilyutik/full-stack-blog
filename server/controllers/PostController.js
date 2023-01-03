@@ -63,7 +63,7 @@ export const getPost = async (request, response) => {
 
         response.json(doc);
       }
-    );
+    ).populate('author');
   } catch (err) {
     console.log(err);
     const status = err.status || 500;

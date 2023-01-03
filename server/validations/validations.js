@@ -30,5 +30,5 @@ export const postCreateValidation = [
     })
     .isString(),
   body('tags', 'Invalid tag format!').optional().isString(),
-  body('imageUrl', 'Invalid image link!').optional().isURL(),
+  body('imageUrl', 'Invalid image link!').optional().isString(),
 ];
