@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+export const baseURL = 'http://localhost:3008';
+
 export const instanse = axios.create({
-  baseURL: 'http://localhost:3008/',
+  baseURL: baseURL,
 });
 
 instanse.interceptors.request.use((config) => {

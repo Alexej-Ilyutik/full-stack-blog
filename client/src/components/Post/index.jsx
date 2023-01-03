@@ -10,6 +10,7 @@ import CommentIcon from '@mui/icons-material/ChatBubbleOutlineOutlined';
 import styles from './Post.module.scss';
 import { UserInfo } from '../UserInfo';
 import { PostSkeleton } from './Skeleton';
+import { baseURL } from '../../axios';
 
 export const Post = ({
   id,
@@ -48,7 +49,7 @@ export const Post = ({
       {imageUrl && (
         <img
           className={clsx(styles.image, { [styles.imageFull]: isFullPost })}
-          src={imageUrl}
+          src={`${baseURL}${imageUrl}`}
           alt={title}
         />
       )}

@@ -2,12 +2,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { instanse } from '../../axios';
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const { data } = await instanse.get('posts');
+  const { data } = await instanse.get('/posts');
   return data;
 });
 
 export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
-  const { data } = await instanse.get('tags');
+  const { data } = await instanse.get('/tags');
   return data;
 });
 

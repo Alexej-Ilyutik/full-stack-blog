@@ -4,18 +4,18 @@ import { instanse } from '../../axios';
 export const fetchAuth = createAsyncThunk(
   'auth/fetchAuth',
   async (params) => {
-    const { data } = await instanse.post('auth/login', params);
+    const { data } = await instanse.post('/auth/login', params);
     return data;
   }
 );
 
 export const fetchRegister = createAsyncThunk('auth/fetchRegister', async (params) => {
-  const { data } = await instanse.post('auth/register', params);
+  const { data } = await instanse.post('/auth/register', params);
   return data;
 });
 
 export const fetchAuthUser = createAsyncThunk('auth/fetchAuthUser', async () => {
-  const { data } = await instanse.get('auth/user');
+  const { data } = await instanse.get('/auth/user');
   return data;
 });
 

@@ -13,7 +13,7 @@ export const FullPost = () => {
 
   useEffect(() => {
     instanse
-      .get(`posts/${id}`)
+      .get(`/posts/${id}`)
       .then((res) => {
         setData(res.data);
         setIsLoading(false);
