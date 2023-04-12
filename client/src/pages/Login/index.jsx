@@ -28,6 +28,7 @@ export const Login = () => {
 
   const onSubmit = async (val) => {
     const data = await dispatch(fetchAuth(val));
+    console.log(data);
 
     if (!data.payload) {
       return alert('Failed to login!');
@@ -51,6 +52,7 @@ export const Login = () => {
         <TextField
           className={styles.field}
           label='E-Mail'
+          placeholder='Email'
           error={Boolean(errors.email?.message)}
           helperText={errors.email?.message}
           type='email'
@@ -60,6 +62,7 @@ export const Login = () => {
         <TextField
           className={styles.field}
           label='password'
+          placeholder='password'
           error={Boolean(errors.password?.message)}
           helperText={errors.password?.message}
           {...register('password', { required: 'Enter your password' })}

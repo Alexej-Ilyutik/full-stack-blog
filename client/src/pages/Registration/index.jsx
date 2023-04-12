@@ -30,6 +30,7 @@ export const Registration = () => {
 
   const onSubmit = async (val) => {
     const data = await dispatch(fetchRegister(val));
+    console.log(data);
 
     if (!data.payload) {
       return alert('Failed to register!');

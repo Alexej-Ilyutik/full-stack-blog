@@ -36,6 +36,7 @@ export const AddPost = () => {
 
   const onClickRemoveImage = () => {
     setImageUrl('');
+    inputFileRef.current.value = '';
   };
 
   const onChange = useCallback((value) => {
@@ -82,7 +83,7 @@ export const AddPost = () => {
   return (
     <Paper style={{ padding: 30 }}>
       <Button
-        onClick={() => inputFileRef.current.click()}
+        onClick={() => {inputFileRef.current.click()}}
         variant='outlined'
         size='large'
       >
