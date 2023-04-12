@@ -5,7 +5,7 @@ import { ReactMarkdown } from 'react-markdown/lib/react-markdown';
 import { Post } from '../components/Post';
 import { Index } from '../components/AddComment';
 import { CommentsBlock } from '../components/CommentsBlock';
-import { instanse } from '../axios';
+import { instanse, baseURL } from '../axios';
 
 export const FullPost = () => {
   const [data, setData] = useState();
@@ -29,12 +29,14 @@ export const FullPost = () => {
     return <Post isLoading={isLoading} isFullPost />;
   }
 
+  console.log(data);
+
   return (
     <>
       <Post
         id={data._id}
         title={data.title}
-        imageUrl={data.imageUrl}
+        imageUrl={data.imageUrl ? `${baseURL}${data.imageUrl}` : ''}
         user={data.author}
         createdAt={data.createdAt}
         viewsCount={data.viewsCount}

@@ -8,6 +8,7 @@ import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
 import { fetchPosts, fetchTags } from '../redux/slices/posts';
+import { baseURL } from '../axios';
 
 export const Home = () => {
   const dispatch = useDispatch();
@@ -42,13 +43,18 @@ export const Home = () => {
                 key={obj._id}
                 id={obj._id}
                 title={obj.title}
-                imageUrl={obj.imageUrl}
+                // imageUrl={(obj.imageUr === '') ? `${baseURL}${obj.imageUrl}` : ''}
+                // imageUrl={
+                //   Boolean(obj.imageUr) ? '' : `${baseURL}${obj.imageUrl}`
+                // }
+                imageUrl={obj.imageUr ? `${baseURL}${obj.imageUrl}` : ''}
+                // imageUrl={obj.imageUr ? '' : `${baseURL}${obj.imageUrl}`}
                 user={obj.author}
                 createdAt={obj.createdAt}
                 viewsCount={obj.viewsCount}
                 commentsCount={3}
                 tags={obj.tags}
-                isEditable={userData?._id===obj.author._id}
+                isEditable={userData?._id === obj.author._id}
               />
             )
           )}
