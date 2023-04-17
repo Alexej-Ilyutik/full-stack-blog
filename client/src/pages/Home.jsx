@@ -43,12 +43,7 @@ export const Home = () => {
                 key={obj._id}
                 id={obj._id}
                 title={obj.title}
-                // imageUrl={(obj.imageUr === '') ? `${baseURL}${obj.imageUrl}` : ''}
-                // imageUrl={
-                //   Boolean(obj.imageUr) ? '' : `${baseURL}${obj.imageUrl}`
-                // }
-                imageUrl={obj.imageUr ? `${baseURL}${obj.imageUrl}` : ''}
-                // imageUrl={obj.imageUr ? '' : `${baseURL}${obj.imageUrl}`}
+                imageUrl={obj.imageUrl ? `${baseURL}${obj.imageUrl}` : ''}
                 user={obj.author}
                 createdAt={obj.createdAt}
                 viewsCount={obj.viewsCount}
