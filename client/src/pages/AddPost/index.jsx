@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import SimpleMDE from 'react-simplemde-editor';
-import { useNavigate, Navigate } from 'react-router-dom';
+import { useNavigate, Navigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import 'easymde/dist/easymde.min.css';
 
@@ -13,6 +13,7 @@ import { instanse, baseURL } from '../../axios';
 import styles from './AddPost.module.scss';
 
 export const AddPost = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const isAuth = useSelector(selectIsAuth);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +22,8 @@ export const AddPost = () => {
   const [tags, setTags] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const inputFileRef = useRef(null);
+
+  const isEditing = Boolean(id);
 
   const handleChangeFile = async (e) => {
     try {
@@ -52,14 +55,32 @@ export const AddPost = () => {
         tags: tags.replace(/[\s.,%]/g, ' ').split(' '),
         text,
       };
-      const { data } = await instanse.post('/posts', fields);
-      const id = data._id;
-      navigate(`/posts/${id}`);
+      const { data } = isEditing
+        ? await instanse.patch(`/posts/${id}`, fields)
+        : await instanse.post('/posts', fields);
+      const _id = isEditing ? id : data._id;
+      navigate(`/posts/${_id}`);
     } catch (err) {
       console.warn(err);
       alert('Error creating article');
     }
   };
+
+  React.useEffect(() => {
+    if (id) {
+      instanse
+        .get(`/posts/${id}`)
+        .then(({ data }) => {
+          setTitle(data.title);
+          setText(data.text);
+          setImageUrl(data.imageUrl);
+          setTags(data.tags);
+        })
+        .catch((err) => {
+          console.warn(err);
+        });
+    }
+  }, []);
 
   const options = React.useMemo(
     () => ({
@@ -83,7 +104,9 @@ export const AddPost = () => {
   return (
     <Paper style={{ padding: 30 }}>
       <Button
-        onClick={() => {inputFileRef.current.click()}}
+        onClick={() => {
+          inputFileRef.current.click();
+        }}
         variant='outlined'
         size='large'
       >
@@ -137,7 +160,7 @@ export const AddPost = () => {
       />
       <div className={styles.buttons}>
         <Button onClick={onSubmit} size='large' variant='contained'>
-          Publish
+          {isEditing ? 'Save' : 'Publish'}
         </Button>
         <a href='/'>
           <Button size='large'>Cancel</Button>
